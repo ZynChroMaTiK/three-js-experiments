@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>My first three.js app</title>
+  <title>Spinning Cube</title>
   <style>
     body {
       margin: 0;
@@ -14,7 +14,7 @@
 <body>
   <script type="module">
 
-    import {
+  import {
       // Render Classes
       Scene,
       PerspectiveCamera,
@@ -28,8 +28,9 @@
       BufferGeometry,
       LineBasicMaterial,
       Line,
+      // Text Classes
       TextGeometry
-    } from 'https://cdn.skypack.dev/three';
+    } from "./js/three.module.js";
 
     const scene = new Scene();
 
@@ -44,7 +45,7 @@
     // Cube
 
     const cube_geo = new BoxGeometry();
-    const cube_mat = new MeshBasicMaterial({ color: 0x00ff00 });
+    const cube_mat = new MeshBasicMaterial({ color: 0xff0000 });
     const cube = new Mesh(cube_geo, cube_mat);
     scene.add(cube);
 
