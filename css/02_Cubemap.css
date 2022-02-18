@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  color: white;
+  text-shadow: 2px 2px 4px #000000
+}
+
+h1 {
+  position: fixed;
+  display: block;
+  padding-left: 20px;
+}
+
+.credits {
+  position: fixed;
+  display: block;
+  right: 0px; bottom: 0px;
+  padding: 20px;
+}
