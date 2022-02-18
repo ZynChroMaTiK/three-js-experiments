@@ -1,4 +1,10 @@
+var progress = document.createElement('div');
+var progressBar = document.createElement('div');
+progress.appendChild(progressBar);
+document.body.appendChild(progress);
+
 import {
+  LoadingManager,
   Scene,
   AmbientLight, DirectionalLight,
   PerspectiveCamera,
@@ -10,6 +16,11 @@ import {
 } from "./three/three.module.js";
 
 import { OrbitControls } from './controls/OrbitControls.js';
+
+const manager = new LoadingManager();
+manager.onProgress = function (item, loaded, total) {
+  progressBar.style.width = (loaded / total * 100) + '%';
+};
 
 let camera, controls, scene, renderer, autoRotateTimeout, raycaster, INTERSECTED;
 const pointer = new Vector2();
