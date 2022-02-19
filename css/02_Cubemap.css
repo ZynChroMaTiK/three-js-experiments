@@ -25,6 +25,7 @@ body {
 
 .main {
   pointer-events: none;
+  touch-action: none;
 }
 
 .logo {
