@@ -75,12 +75,14 @@ document.onwheel = (event) => {
 // ==== Orbit Controls
 
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableZoom = false;
+controls.enablePan = false;
 controls.enableDamping = true;
-controls.rotateSpeed *= -0.2;
 controls.autoRotate = true;
+controls.screenSpacePanning = false;
+controls.rotateSpeed *= -0.2;
 controls.autoRotateSpeed = 1.0;
 controls.dampingFactor = 0.5;
-controls.screenSpacePanning = false;
 controls.minDistance = 0.001;
 
 // Stop autorotate after the first interaction
