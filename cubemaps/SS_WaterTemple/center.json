@@ -1,11 +1,11 @@
 {
   "cubemap": [
-    "cubemaps/SS_WaterTemple/center/right.jpg",
-    "cubemaps/SS_WaterTemple/center/left.jpg",
-    "cubemaps/SS_WaterTemple/center/top.jpg",
-    "cubemaps/SS_WaterTemple/center/bottom.jpg",
-    "cubemaps/SS_WaterTemple/center/front.jpg",
-    "cubemaps/SS_WaterTemple/center/back.jpg"
+    "./cubemaps/SS_WaterTemple/center/right.jpg",
+    "./cubemaps/SS_WaterTemple/center/left.jpg",
+    "./cubemaps/SS_WaterTemple/center/top.jpg",
+    "./cubemaps/SS_WaterTemple/center/bottom.jpg",
+    "./cubemaps/SS_WaterTemple/center/front.jpg",
+    "./cubemaps/SS_WaterTemple/center/back.jpg"
   ],
   "lightAmb": {
     "hex": "0x38464a"
