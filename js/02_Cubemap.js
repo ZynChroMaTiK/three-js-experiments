@@ -136,7 +136,7 @@ function raycast() {
       INTERSECTED = intersects[0].object;
       document.body.style.cursor = 'pointer';
       INTERSECTED.material = pinHoverMat;
-      console.log(`Hovered at ${INTERSECTED}`);
+      console.log(`Object hovered`);
     }
   } else {
     // Not on Hover
