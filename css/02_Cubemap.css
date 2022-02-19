@@ -8,6 +8,7 @@
   from {opacity: 1;} to {opacity: 0;}
 }
 
+
 body {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -22,20 +23,20 @@ body {
   text-shadow: 2px 2px 4px #000000
 }
 
+.main {
+  pointer-events: none;
+}
+
+.logo {
+  width: 480px;
+}
+
 .fadein {
   animation-name: fadein;
   animation-duration: 2s;
 }
 
 .title {
-  position: fixed;
-  display: block;
-  padding-left: 20px;
-}
-
-.credits {
-  position: fixed;
-  display: block;
-  right: 0px; bottom: 0px;
-  padding: 20px;
+  font-weight: bolder;
+  font-size: xx-large;
 }
