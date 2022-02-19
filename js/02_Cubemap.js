@@ -158,7 +158,7 @@ function animate() {
 //           M  A  I  N
 // ================================
 
-loadCubemap('cubemaps/SS_WaterTemple/center.json');
+loadCubemap('./cubemaps/SS_WaterTemple/center.json');
 
 const pinMdl = new BoxGeometry(2, 2, 2);
 const pinMat = new MeshLambertMaterial({ color: 0xffffff });
