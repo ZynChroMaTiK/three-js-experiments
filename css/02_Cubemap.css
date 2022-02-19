@@ -1,5 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
+@keyframes fadein {
+  from {opacity: 0;} to {opacity: 1;}
+}
+
+@keyframes fadeout {
+  from {opacity: 1;} to {opacity: 0;}
+}
+
 body {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -14,7 +22,12 @@ body {
   text-shadow: 2px 2px 4px #000000
 }
 
-h1 {
+.fadein {
+  animation-name: fadein;
+  animation-duration: 2s;
+}
+
+.title {
   position: fixed;
   display: block;
   padding-left: 20px;
