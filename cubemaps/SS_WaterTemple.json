@@ -1,0 +1,19 @@
+{
+  "lightAmb": {
+    "hex": "0x38464a"
+  },
+
+  "lightDir": {
+    "hex": "0x7f7f7f",
+    "x": 4,
+    "y": -3,
+    "z": -3
+  },
+
+  "center": [
+    ["entrance",  [7, -3, 7]],
+    ["water",     [-7, -3, 7]],
+    ["poolleft",  [7, -3, -7]],
+    ["poolright", [-7, -3, -7]]
+  ]
+}

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable import/extensions */
 
 import {
@@ -5,9 +6,9 @@ import {
   Cache, FileLoader,
   // Renderer
   WebGLRenderer,
-  // Scene
+  // sceneName
   Scene, AmbientLight, DirectionalLight,
-  BoxGeometry, SphereGeometry, MeshLambertMaterial, Mesh,
+  SphereGeometry, MeshLambertMaterial, Mesh,
   CubeTextureLoader, CubeRefractionMapping,
   // Camera
   PerspectiveCamera,
@@ -18,12 +19,25 @@ import {
 import { OrbitControls } from './controls/OrbitControls.js';
 
 // ================================
-//   I N I T I A L I Z A T I O N
+//        V A R I A B L E S
 // ================================
+
+const faceNames = ['right', 'left', 'top', 'bottom', 'front', 'back'];
+
+const pinpointMdl = new SphereGeometry(1);
+const pinpointMat = new MeshLambertMaterial({ color: 0xffffff });
+const pinpointHoverMat = new MeshLambertMaterial({ color: 0xffffff });
+pinpointHoverMat.emissive.setHex(0xff0000);
 
 let json; let textureCube;
 let fov; let autoRotateTimeout;
+
+let currentSceneName; let pinpoints; let po;
 let intersects; let INTERSECTED;
+
+// ================================
+//   I N I T I A L I Z A T I O N
+// ================================
 
 // File loader to read cubemap JSONs
 Cache.enabled = true;
@@ -36,7 +50,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// ================ SCENE ================
+// ================ sceneName ================
 
 const scene = new Scene();
 const lightAmb = new AmbientLight();
@@ -61,15 +75,19 @@ window.onresize = () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 };
 
-document.onmousemove = (event) => {
+renderer.domElement.onmousemove = (event) => {
   pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
   pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 };
 
-document.onwheel = (event) => {
+renderer.domElement.onwheel = (event) => {
   fov = camera.fov + event.deltaY * 0.05;
   camera.fov = MathUtils.clamp(fov, 30, 90);
   camera.updateProjectionMatrix();
+};
+
+renderer.domElement.onclick = (event) => {
+  if (INTERSECTED) console.log(`Object clicked: ${INTERSECTED.name}`);
 };
 
 // ==== Orbit Controls
@@ -102,24 +120,39 @@ controls.addEventListener('end', () => {
 const raycaster = new Raycaster();
 camera.updateMatrixWorld();
 
-// ======== FUNCTIONS ================
+// ================================
+//         F U N C T I O N S
+// ================================
 
-function loadCubemap(cubemap) {
+function loadCubemap(sceneName, viewName) {
   loader.load(
-    `./cubemaps/${cubemap}.json`,
+    `./cubemaps/${sceneName}.json`,
     (data) => {
-      // Parsing JSON file
+      // Remove previous pinpoints if any
+      if (pinpoints) { pinpoints.array.forEach((p) => sceneName.remove(p)); }
+      // Parse JSON file
       json = JSON.parse(data);
-      // Loading Cubemap
-      textureCube = new CubeTextureLoader().load(json.cubemap);
+      // Load Cubemap
+      textureCube = new CubeTextureLoader().load(faceNames.map((i) => `./cubemaps/${sceneName}/${viewName}/${i}.jpg`));
       textureCube.mapping = CubeRefractionMapping;
       scene.background = textureCube;
-      // Loading Ambient Light
-      lightAmb.color.setHex(json.lightAmb.hex);
-      // Loading Directional Light
-      lightDir.color.setHex(json.lightDir.hex);
-      lightDir.target.position.set(json.lightDir.x, json.lightDir.y, json.lightDir.z);
-      lightDir.target.updateMatrixWorld();
+      // Change light if different scene
+      if (currentSceneName !== sceneName) {
+        // Load Ambient Light
+        lightAmb.color.setHex(json.lightAmb.hex);
+        // Load Directional Light
+        lightDir.color.setHex(json.lightDir.hex);
+        lightDir.target.position.set(json.lightDir.x, json.lightDir.y, json.lightDir.z);
+        lightDir.target.updateMatrixWorld();
+      }
+      // Load Pinpoints
+      pinpoints = json[viewName].map((p) => {
+        po = new Mesh(pinpointMdl, pinpointMat);
+        po.name = p[0];
+        po.position.set(p[1][0], p[1][1], p[1][2]);
+        scene.add(po);
+        return po;
+      });
     },
     (xhr) => { console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`); },
     (err) => { console.error(`Failed to load cubemap: ${err}`); },
@@ -128,24 +161,26 @@ function loadCubemap(cubemap) {
 
 function raycast() {
   raycaster.setFromCamera(pointer, camera);
-  intersects = raycaster.intersectObjects(refs, false);
+  if (pinpoints) {
+    intersects = raycaster.intersectObjects(pinpoints, false);
 
-  if (intersects.length > 0) {
-    // On Hover
-    if (INTERSECTED !== intersects[0].object) {
-      if (INTERSECTED) INTERSECTED.material = pinMat;
+    if (intersects.length > 0) {
+      // On Hover
+      if (INTERSECTED !== intersects[0].object) {
+        if (INTERSECTED) INTERSECTED.material = pinpointMat;
 
-      INTERSECTED = intersects[0].object;
-      document.body.style.cursor = 'pointer';
-      INTERSECTED.material = pinHoverMat;
-      console.log(`Object hovered`);
+        INTERSECTED = intersects[0].object;
+        document.body.style.cursor = 'pointer';
+        INTERSECTED.material = pinpointHoverMat;
+        console.log(`Object hovered: ${INTERSECTED.name}`);
+      }
+    } else {
+      // Not on Hover
+      if (INTERSECTED) INTERSECTED.material = pinpointMat;
+
+      INTERSECTED = null;
+      document.body.style.cursor = 'default';
     }
-  } else {
-    // Not on Hover
-    if (INTERSECTED) INTERSECTED.material = pinMat;
-
-    INTERSECTED = null;
-    document.body.style.cursor = 'default';
   }
 }
 
@@ -160,30 +195,6 @@ function animate() {
 //           M  A  I  N
 // ================================
 
-loadCubemap('SS_WaterTemple/center');
-
-const pinMdl = new BoxGeometry(2, 2, 2);
-const pinMat = new MeshLambertMaterial({ color: 0xffffff });
-const pinHoverMat = new MeshLambertMaterial({ color: 0xffffff });
-pinHoverMat.emissive.setHex(0xff0000);
-
-const refMdl = new SphereGeometry(1);
-const refs = [
-  new Mesh(refMdl, pinMat),
-  new Mesh(refMdl, pinMat),
-  new Mesh(refMdl, pinMat),
-  new Mesh(refMdl, pinMat),
-];
-
-const pinpoint = new Mesh(pinMdl, pinMat);
-pinpoint.position.set(10, -2, 0);
-scene.add(pinpoint);
-
-refs[0].position.set(7, -3, 7);
-refs[1].position.set(-7, -3, 7);
-refs[2].position.set(7, -3, -7);
-refs[3].position.set(-7, -3, -7);
-
-refs.forEach((ref) => scene.add(ref));
+loadCubemap('SS_WaterTemple', 'center');
 
 animate();
