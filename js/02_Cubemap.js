@@ -8,7 +8,7 @@ import {
   WebGLRenderer,
   // sceneName
   Scene, AmbientLight, DirectionalLight,
-  SphereGeometry, MeshLambertMaterial, Mesh,
+  BoxGeometry, MeshLambertMaterial, Mesh,
   CubeTextureLoader, CubeRefractionMapping,
   // Camera
   PerspectiveCamera,
@@ -24,7 +24,7 @@ import { OrbitControls } from './controls/OrbitControls.js';
 
 const faceNames = ['right', 'left', 'top', 'bottom', 'front', 'back'];
 
-const pinpointMdl = new SphereGeometry(1);
+const pinpointMdl = new BoxGeometry(1, 2, 1);
 const pinpointMat = new MeshLambertMaterial({ color: 0xffffff });
 const pinpointHoverMat = new MeshLambertMaterial({ color: 0xffffff });
 pinpointHoverMat.emissive.setHex(0xff0000);
@@ -50,7 +50,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// ================ sceneName ================
+// ================ SCENE ================
 
 const scene = new Scene();
 const lightAmb = new AmbientLight();
@@ -87,7 +87,10 @@ renderer.domElement.onwheel = (event) => {
 };
 
 renderer.domElement.onclick = (event) => {
-  if (INTERSECTED) console.log(`Object clicked: ${INTERSECTED.name}`);
+  if (INTERSECTED) {
+    console.log(`'${INTERSECTED.name}' Selected`);
+    loadCubemap(currentSceneName, INTERSECTED.name);
+  }
 };
 
 // ==== Orbit Controls
@@ -129,7 +132,7 @@ function loadCubemap(sceneName, viewName) {
     `./cubemaps/${sceneName}.json`,
     (data) => {
       // Remove previous pinpoints if any
-      if (pinpoints) { pinpoints.array.forEach((p) => sceneName.remove(p)); }
+      if (pinpoints) { pinpoints.forEach((p) => scene.remove(p)); }
       // Parse JSON file
       json = JSON.parse(data);
       // Load Cubemap
@@ -145,14 +148,18 @@ function loadCubemap(sceneName, viewName) {
         lightDir.target.position.set(json.lightDir.x, json.lightDir.y, json.lightDir.z);
         lightDir.target.updateMatrixWorld();
       }
-      // Load Pinpoints
-      pinpoints = json[viewName].map((p) => {
-        po = new Mesh(pinpointMdl, pinpointMat);
-        po.name = p[0];
-        po.position.set(p[1][0], p[1][1], p[1][2]);
-        scene.add(po);
-        return po;
-      });
+      // Load Pinpoints if any
+      if (json[viewName]) {
+        pinpoints = json[viewName].map((p) => {
+          po = new Mesh(pinpointMdl, pinpointMat);
+          po.name = p[0];
+          po.position.set(p[1][0], p[1][1], p[1][2]);
+          scene.add(po);
+          return po;
+        });
+      }
+      // Save current scene name
+      currentSceneName = sceneName;
     },
     (xhr) => { console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`); },
     (err) => { console.error(`Failed to load cubemap: ${err}`); },
@@ -172,7 +179,7 @@ function raycast() {
         INTERSECTED = intersects[0].object;
         document.body.style.cursor = 'pointer';
         INTERSECTED.material = pinpointHoverMat;
-        console.log(`Object hovered: ${INTERSECTED.name}`);
+        console.log(`'${INTERSECTED.name}'`);
       }
     } else {
       // Not on Hover
