@@ -87,6 +87,8 @@ renderer.domElement.onwheel = (event) => {
 };
 
 renderer.domElement.onclick = (event) => {
+  // Raycast on touch for touchscreen
+  raycast();
   if (INTERSECTED) {
     console.log(`'${INTERSECTED.name}' Selected`);
     loadCubemap(currentSceneName, INTERSECTED.name);
@@ -127,8 +129,9 @@ camera.updateMatrixWorld();
 //         F U N C T I O N S
 // ================================
 
-function loadCubemap(sceneName, viewName) {
-  loader.load(
+async function loadCubemap(sceneName, viewName) {
+  console.log('Loading');
+  await loader.load(
     `./cubemaps/${sceneName}.json`,
     (data) => {
       // Remove previous pinpoints if any
@@ -160,9 +163,10 @@ function loadCubemap(sceneName, viewName) {
       }
       // Save current scene name
       currentSceneName = sceneName;
+      console.log('Loaded');
     },
-    (xhr) => { console.log(`${(xhr.loaded / xhr.total) * 100}% loaded`); },
-    (err) => { console.error(`Failed to load cubemap: ${err}`); },
+    // (xhr) => { console.log(`${(xhr.loaded / xhr.total) * 100}%`); },
+    // (err) => { console.error(`Failed to load cubemap: ${err}`); },
   );
 }
 
