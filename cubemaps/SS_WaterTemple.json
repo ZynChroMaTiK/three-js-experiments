@@ -1,4 +1,6 @@
 {
+  "faceNames": ["right", "left", "top", "bottom", "front", "back"],
+
   "lightAmb": {
     "hex": "0x38464a"
   },

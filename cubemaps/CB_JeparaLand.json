@@ -1,0 +1,25 @@
+{
+  "faceNames": ["px", "nx", "black", "black", "pz", "nz"],
+
+  "lightAmb": {
+    "hex": "0x1C261E"
+  },
+
+  "lightDir": {
+    "hex": "0xEEEEEE",
+    "x": -1,
+    "y": -3,
+    "z": -3
+  },
+
+  "middle": [
+    ["left",     [20, -2, 4]],
+    ["right",  [-16, -2, -10]]
+  ],
+  "left": [
+    ["middle", [20, -2, -10]]
+  ],
+  "right": [
+    ["middle", [16, -2, 12]]
+  ]
+}

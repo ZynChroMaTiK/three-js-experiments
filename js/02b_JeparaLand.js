@@ -22,7 +22,7 @@ import { OrbitControls } from './controls/OrbitControls.js';
 //        V A R I A B L E S
 // ================================
 
-const faceNames = ['right', 'left', 'top', 'bottom', 'front', 'back'];
+let faceNames = ['px', 'nx', 'py', 'ny', 'pz', 'nz'];
 
 const pinpointMdl = new BoxGeometry(1, 2, 1);
 const pinpointMat = new MeshLambertMaterial({ color: 0xffffff });
@@ -107,6 +107,7 @@ controls.rotateSpeed *= -0.2;
 controls.autoRotateSpeed = 1.0;
 controls.dampingFactor = 0.5;
 controls.minDistance = 0.001;
+
 
 // Stop autorotate after the first interaction
 controls.addEventListener('start', () => {
@@ -195,6 +196,7 @@ function raycast() {
   }
 }
 
+// Animate for Desktop - mouse hover
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
@@ -202,10 +204,17 @@ function animate() {
   renderer.render(scene, camera);
 }
 
+// Animate for Touch - no mouse hover
+function animateTouch() {
+  requestAnimationFrame(animateTouch);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
 // ================================
 //           M  A  I  N
 // ================================
 
-loadCubemap('SS_WaterTemple', 'center');
+loadCubemap('CB_JeparaLand', 'middle');
 
-animate();
+if ('ontouchstart' in window) animateTouch(); else animate();
