@@ -6,14 +6,14 @@ import {
   Cache, FileLoader,
   // Renderer
   WebGLRenderer,
-  // sceneName
+  // scene
   Scene, AmbientLight, DirectionalLight,
-  BoxGeometry, MeshLambertMaterial, Mesh,
+  Sprite, SpriteMaterial,
   CubeTextureLoader, CubeRefractionMapping,
   // Camera
   PerspectiveCamera,
   // Controls
-  Vector2, Raycaster, MathUtils,
+  Vector2, Raycaster, MathUtils, TextureLoader,
 } from './three/three.module.js';
 
 import { OrbitControls } from './controls/OrbitControls.js';
@@ -22,17 +22,24 @@ import { OrbitControls } from './controls/OrbitControls.js';
 //        V A R I A B L E S
 // ================================
 
-const pinpointMdl = new BoxGeometry(1, 2, 1);
-const pinpointMat = new MeshLambertMaterial({ color: 0xffffff });
-const pinpointHoverMat = new MeshLambertMaterial({ color: 0xffffff });
-pinpointHoverMat.emissive.setHex(0xff0000);
+const arrowMat = new SpriteMaterial({
+  map: new TextureLoader().load('../img/arrow.png'),
+  opacity: 0.5,
+  transparent: true,
+});
+
+const arrowSelMat = new SpriteMaterial({
+  map: new TextureLoader().load('../img/arrowSel.png'),
+  opacity: 0.5,
+  transparent: true,
+});
 
 let faceNames;
 
 let json; let textureCube;
 let fov; let autoRotateTimeout;
 
-let currentSceneName; let pinpoints; let po;
+let currentSceneName; let arrows; let po;
 let intersects; let INTERSECTED;
 
 // ================================
@@ -86,7 +93,7 @@ renderer.domElement.onwheel = (event) => {
   camera.updateProjectionMatrix();
 };
 
-renderer.domElement.onclick = (event) => {
+renderer.domElement.onclick = () => {
   // Raycast on touch for touchscreen
   raycast();
   if (INTERSECTED) {
@@ -131,22 +138,22 @@ camera.updateMatrixWorld();
 
 function raycast() {
   raycaster.setFromCamera(pointer, camera);
-  if (pinpoints) {
-    intersects = raycaster.intersectObjects(pinpoints, false);
+  if (arrows) {
+    intersects = raycaster.intersectObjects(arrows, false);
 
     if (intersects.length > 0) {
       // On Hover
       if (INTERSECTED !== intersects[0].object) {
-        if (INTERSECTED) INTERSECTED.material = pinpointMat;
+        if (INTERSECTED) INTERSECTED.material = arrowMat;
 
         INTERSECTED = intersects[0].object;
         document.body.style.cursor = 'pointer';
-        INTERSECTED.material = pinpointHoverMat;
-        console.log(`'${INTERSECTED.name}'`);
+        INTERSECTED.material = arrowSelMat;
+        console.log(`${INTERSECTED.name}`);
       }
     } else {
       // Not on Hover
-      if (INTERSECTED) INTERSECTED.material = pinpointMat;
+      if (INTERSECTED) INTERSECTED.material = arrowMat;
 
       INTERSECTED = null;
       document.body.style.cursor = 'default';
@@ -174,8 +181,8 @@ async function loadCubemap(sceneName, viewName) {
   await loader.load(
     `./cubemaps/${sceneName}.json`,
     (data) => {
-      // Remove previous pinpoints if any
-      if (pinpoints) { pinpoints.forEach((p) => scene.remove(p)); }
+      // Remove previous arrows if any
+      if (arrows) { arrows.forEach((p) => scene.remove(p)); }
       // Parse JSON file
       json = JSON.parse(data);
       // If New or Different Scene
@@ -193,10 +200,10 @@ async function loadCubemap(sceneName, viewName) {
       textureCube = new CubeTextureLoader().load(faceNames.map((i) => `./cubemaps/${sceneName}/${viewName}/${i}.jpg`));
       textureCube.mapping = CubeRefractionMapping;
       scene.background = textureCube;
-      // Load Pinpoints if any
+      // Load arrows if any
       if (json[viewName]) {
-        pinpoints = json[viewName].map((p) => {
-          po = new Mesh(pinpointMdl, pinpointMat);
+        arrows = json[viewName].map((p) => {
+          po = new Sprite(arrowMat);
           po.name = p[0];
           po.position.set(p[1][0], p[1][1], p[1][2]);
           scene.add(po);

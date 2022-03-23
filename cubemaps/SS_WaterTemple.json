@@ -13,13 +13,13 @@
   },
 
   "center": [
-    ["entrance",  [40, -2, 0]],
-    ["water",     [-8, -2, 8]],
-    ["poolleft",  [8, -2, -8]],
-    ["poolright", [-8, -2, -8]]
+    ["entrance",  [8, -1, 0]],
+    ["water",     [-8, -1, 8]],
+    ["poolleft",  [8, -1, -8]],
+    ["poolright", [-8, -1, -8]]
   ],
 
   "entrance": [
-    ["center", [-40, -2, 0]]
+    ["center", [-8, -1, 0]]
   ]
 }
