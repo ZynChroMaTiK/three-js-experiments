@@ -23,13 +23,13 @@ import { OrbitControls } from './controls/OrbitControls.js';
 // ================================
 
 const arrowMat = new SpriteMaterial({
-  map: new TextureLoader().load('../img/arrow.png'),
+  map: new TextureLoader().load('./img/arrow.png'),
   opacity: 0.5,
   transparent: true,
 });
 
 const arrowSelMat = new SpriteMaterial({
-  map: new TextureLoader().load('../img/arrowSel.png'),
+  map: new TextureLoader().load('./img/arrowSel.png'),
   opacity: 0.5,
   transparent: true,
 });
