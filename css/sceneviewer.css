@@ -8,8 +8,11 @@
   from {opacity: 1;} to {opacity: 0;}
 }
 
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
 
-body {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -18,9 +21,12 @@ body {
   user-select: none;
 
   font-family: 'Roboto', sans-serif;
-  margin: 0;
   color: white;
   text-shadow: 2px 2px 4px #000000
+}
+
+body {
+
 }
 
 .main {
