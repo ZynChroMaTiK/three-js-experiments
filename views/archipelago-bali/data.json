@@ -1,0 +1,47 @@
+{
+  "type": "partial",
+  "firstScene": "office",
+
+  "scenes": {
+
+    "office": {
+      "text": "Main office",
+      "dir": [0, -160],
+      "scenes": {
+        "pantry": [-10, -94],
+        "director": [-15, 145],
+        "server": [-10, -80]
+      },
+      "infos": {
+        "brian": {
+          "text": "Brian",
+          "pos": [-4, -170]
+        }
+      }
+    },
+
+    "pantry": {
+      "text": "Pantry",
+      "dir": [0, 0],
+
+      "scenes": {},
+      "infos": {}
+    },
+
+    "director": {
+      "text": "Director's Office",
+      "dir": [0, 0],
+
+      "scenes": {},
+      "infos": {}
+    },
+
+    "server": {
+      "text": "Server Room",
+      "dir": [0, 0],
+
+      "scenes": {},
+      "infos": {}
+    }
+  }
+}
