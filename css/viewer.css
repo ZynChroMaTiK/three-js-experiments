@@ -25,10 +25,6 @@ html, body {
   text-shadow: 2px 2px 4px #000000
 }
 
-body {
-
-}
-
 .main {
   pointer-events: none;
   touch-action: none;
@@ -48,4 +44,16 @@ body {
 .title {
   font-weight: bolder;
   font-size: xx-large;
+}
+
+.sceneSpot {
+  height: 50px;
+  width: 50px;
+  opacity: 0.75;
+  background-size: contain;
+  background-image: url("../img/arrow.png");
+  transition: background-image .5s;
+}
+.sceneSpot:hover {
+  background-image: url("../img/arrowSel.png");
 }
