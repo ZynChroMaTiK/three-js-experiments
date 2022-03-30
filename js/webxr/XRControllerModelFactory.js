@@ -1,12 +1,6 @@
+/* eslint-disable max-len */
 /* eslint-disable max-classes-per-file */
 /* eslint-disable import/extensions */
-
-import {
-  Mesh,
-  MeshBasicMaterial,
-  Object3D,
-  SphereGeometry,
-} from '../three/three.module.js';
 
 import { GLTFLoader } from '../loaders/GLTFLoader.js';
 
@@ -19,7 +13,7 @@ import {
 const DEFAULT_PROFILES_PATH = 'https://cdn.jsdelivr.net/npm/@webxr-input-profiles/assets@1.0/dist/profiles';
 const DEFAULT_PROFILE = 'generic-trigger';
 
-class XRControllerModel extends Object3D {
+class XRControllerModel extends THREE.Object3D {
   constructor() {
     super();
 
@@ -28,7 +22,7 @@ class XRControllerModel extends Object3D {
   }
 
   setEnvironmentMap(envMap) {
-    if (this.envMap == envMap) {
+    if (this.envMap === envMap) {
       return this;
     }
 
@@ -102,9 +96,9 @@ function findNodes(motionController, scene) {
       component.touchPointNode = scene.getObjectByName(touchPointNodeName);
       if (component.touchPointNode) {
         // Attach a touch dot to the touchpad.
-        const sphereGeometry = new SphereGeometry(0.001);
-        const material = new MeshBasicMaterial({ color: 0x0000FF });
-        const sphere = new Mesh(sphereGeometry, material);
+        const sphereGeometry = new THREE.SphereGeometry(0.001);
+        const material = new THREE.MeshBasicMaterial({ color: 0x0000FF });
+        const sphere = new THREE.Mesh(sphereGeometry, material);
         component.touchPointNode.add(sphere);
       } else {
         console.warn(`Could not find touch dot, ${component.touchPointNodeName}, in touchpad component ${component.id}`);
