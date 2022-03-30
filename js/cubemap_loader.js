@@ -234,7 +234,7 @@ function raycast() {
 
 // Animate for Desktop - mouse hover
 function animate() {
-  requestAnimationFrame(animate);
+  renderer.setAnimationLoop(animate);
   controls.update();
   raycast();
   renderer.render(scene, camera);
@@ -246,10 +246,6 @@ function animateTouch() {
   controls.update();
   renderer.render(scene, camera);
 }
-
-renderer.setAnimationLoop(() => {
-  renderer.render(scene, camera);
-});
 
 async function loadCubemap(sceneName, viewName) {
   console.log('Loading');
