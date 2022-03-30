@@ -228,3 +228,5 @@ async function loadCubemap(sceneName, viewName) {
 // ================================
 
 if ('ontouchstart' in window) animateTouch(); else animate();
+
+export default loadCubemap;

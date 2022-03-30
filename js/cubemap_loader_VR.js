@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable consistent-return */
 /* eslint-disable no-plusplus */
 /* eslint-disable max-len */
