@@ -1,3 +1,5 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable default-case */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable import/extensions */
 
@@ -14,9 +16,18 @@ import {
   PerspectiveCamera,
   // Controls
   Vector2, Raycaster, MathUtils, TextureLoader,
+  // ETC
+  BufferGeometry, Float32BufferAttribute,
+  Line, LineBasicMaterial,
+  RingGeometry, Mesh, MeshBasicMaterial,
+  Matrix4,
 } from './three/three.module.js';
 
 import { OrbitControls } from './controls/OrbitControls.js';
+
+import { VRButton } from './webxr/VRButton.js';
+
+import { XRControllerModelFactory } from './webxr/XRControllerModelFactory.js';
 
 // ================================
 //        V A R I A B L E S
@@ -42,6 +53,9 @@ let fov; let autoRotateTimeout;
 let currentSceneName; let arrows; let po;
 let intersects; let INTERSECTED;
 
+let controller; let controllerGrip;
+const tempMatrix = new Matrix4();
+
 // ================================
 //   I N I T I A L I Z A T I O N
 // ================================
@@ -56,6 +70,10 @@ const renderer = new WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+
+// ================ VR ================
+document.body.appendChild(VRButton.createButton(renderer));
+renderer.xr.enabled = true;
 
 // ================ SCENE ================
 
@@ -132,11 +150,64 @@ controls.addEventListener('end', () => {
 const raycaster = new Raycaster();
 camera.updateMatrixWorld();
 
+// VR Controls
+controller = renderer.xr.getController(0);
+controller.addEventListener('selectstart', onSelectStart);
+controller.addEventListener('selectend', onSelectEnd);
+controller.addEventListener('connected', (event) => {
+  this.add(buildController(event.data));
+});
+controller.addEventListener('disconnected', () => {
+  this.remove(this.children[0]);
+});
+
+const controllerModelFactory = new XRControllerModelFactory();
+controllerGrip = renderer.xr.getControllerGrip(0);
+controllerGrip.add(controllerModelFactory.createControllerModel(controllerGrip));
+scene.add(controllerGrip);
+
+function onSelectStart() {
+  this.userData.isSelecting = true;
+  loadCubemap(currentSceneName, INTERSECTED.name);
+}
+
+function onSelectEnd() {
+  this.userData.isSelecting = false;
+}
+
 // ================================
 //         F U N C T I O N S
 // ================================
 
+function buildController(data) {
+  let geometry;
+  let material;
+
+  switch (data.targetRayMode) {
+    case 'tracked-pointer':
+
+      geometry = new BufferGeometry();
+      geometry.setAttribute('position', new Float32BufferAttribute([0, 0, 0, 0, 0, -1], 3));
+      geometry.setAttribute('color', new Float32BufferAttribute([0.5, 0.5, 0.5, 0, 0, 0], 3));
+
+      material = new LineBasicMaterial({ vertexColors: true, blending: AdditiveBlending });
+
+      return new Line(geometry, material);
+
+    case 'gaze':
+
+      geometry = new RingGeometry(0.02, 0.04, 32).translate(0, 0, -1);
+      material = new MeshBasicMaterial({ opacity: 0.5, transparent: true });
+      return new Mesh(geometry, material);
+  }
+}
+
 function raycast() {
+  tempMatrix.identity().extractRotation(controller.matrixWorld);
+
+  raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
+  raycaster.ray.direction.set(0, 0, -1).applyMatrix4(tempMatrix);
+
   raycaster.setFromCamera(pointer, camera);
   if (arrows) {
     intersects = raycaster.intersectObjects(arrows, false);
@@ -175,6 +246,10 @@ function animateTouch() {
   controls.update();
   renderer.render(scene, camera);
 }
+
+renderer.setAnimationLoop(() => {
+  renderer.render(scene, camera);
+});
 
 async function loadCubemap(sceneName, viewName) {
   console.log('Loading');
