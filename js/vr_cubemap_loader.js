@@ -18,6 +18,8 @@ import {
 
 import { OrbitControls } from './controls/OrbitControls.js';
 
+import { VRButton } from './webxr/VRButton.js';
+
 // ================================
 //        V A R I A B L E S
 // ================================
@@ -132,6 +134,11 @@ controls.addEventListener('end', () => {
 const raycaster = new Raycaster();
 camera.updateMatrixWorld();
 
+// ================ VR ================
+document.body.appendChild(VRButton.createButton(renderer));
+renderer.xr.enabled = true;
+
+
 // ================================
 //         F U N C T I O N S
 // ================================
@@ -175,6 +182,10 @@ function animateTouch() {
   controls.update();
   renderer.render(scene, camera);
 }
+
+renderer.setAnimationLoop(() => {
+  renderer.render(scene, camera);
+});
 
 async function loadCubemap(sceneName, viewName) {
   console.log('Loading');
