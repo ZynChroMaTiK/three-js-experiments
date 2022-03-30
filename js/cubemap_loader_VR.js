@@ -9,6 +9,7 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable import/extensions */
 
+import * as THREE from './three/three.min.js';
 import { VRButton } from './webxr/VRButton.js';
 import { XRControllerModelFactory } from './webxr/XRControllerModelFactory.js';
 
