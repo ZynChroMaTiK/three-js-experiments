@@ -14,7 +14,7 @@
     crossorigin="anonymous"
   >
 
-  <link rel="stylesheet" href="./css/sceneviewer.css">
+  <link rel="stylesheet" href="./css/viewer.css">
 
 </head>
 
@@ -35,12 +35,8 @@
 
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-
-  <script type="module">
-    import loadCubemap from './js/cubemap_loader.js';
-    loadCubemap('SS_WaterTemple', 'center');
-  </script>
+  <script type="module" src='./js/cubemap_loader.js'></script>
+  <script> loadCubemap('SS_WaterTemple', 'center'); </script>
 
 </body>
 
