@@ -12,7 +12,7 @@ import {
   BufferGeometry,
   LineBasicMaterial,
   Line,
-} from "./three/three.module.js";
+} from './three/three.module.js';
 
 const scene = new Scene();
 
@@ -26,22 +26,22 @@ document.body.appendChild(renderer.domElement);
 
 // Cube
 
-const cube_geo = new BoxGeometry();
-const cube_mat = new MeshBasicMaterial({ color: 0xff0000 });
-const cube = new Mesh(cube_geo, cube_mat);
+const cubeGeo = new BoxGeometry();
+const cubeMat = new MeshBasicMaterial({ color: 0xff0000 });
+const cube = new Mesh(cubeGeo, cubeMat);
 scene.add(cube);
 
 // Lines
 
 const points = [
-  new Vector3(- 1, 0, 0),
+  new Vector3(-1, 0, 0),
   new Vector3(0, 1, 0),
-  new Vector3(1, 0, 0)
+  new Vector3(1, 0, 0),
 ];
 
-const line_geo = new BufferGeometry().setFromPoints(points);
-const line_mat = new LineBasicMaterial({ color: 0x0000ff });
-const line = new Line(line_geo, line_mat);
+const lineGeo = new BufferGeometry().setFromPoints(points);
+const lineMat = new LineBasicMaterial({ color: 0x0000ff });
+const line = new Line(lineGeo, lineMat);
 scene.add(line);
 
 // Give animation to Cube
@@ -60,7 +60,7 @@ animate();
 
 // Window Resize event
 
-window.addEventListener("resize", () => {
+window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
 
