@@ -60,10 +60,6 @@ document.body.appendChild(renderer.domElement);
 // ================ SCENE ================
 
 const scene = new Scene();
-const lightAmb = new AmbientLight();
-scene.add(lightAmb);
-const lightDir = new DirectionalLight();
-scene.add(lightDir);
 
 // ================ CAMERA ================
 
@@ -156,7 +152,6 @@ function raycast() {
       if (INTERSECTED) INTERSECTED.material = arrowMat;
 
       INTERSECTED = null;
-      document.body.style.cursor = 'default';
     }
   }
 }
@@ -181,8 +176,7 @@ renderer.setAnimationLoop(() => {
 });
 
 async function loadCubemap(sceneName, viewName) {
-  console.log('Loading');
-  await loader.load(
+  loader.load(
     `./cubemaps/${sceneName}.json`,
     (data) => {
       // Remove previous arrows if any
@@ -193,12 +187,6 @@ async function loadCubemap(sceneName, viewName) {
       if (currentSceneName !== sceneName) {
         // Get Face Names
         faceNames = json.faceNames;
-        // Load Ambient Light
-        lightAmb.color.setHex(json.lightAmb.hex);
-        // Load Directional Light
-        lightDir.color.setHex(json.lightDir.hex);
-        lightDir.target.position.set(json.lightDir.x, json.lightDir.y, json.lightDir.z);
-        lightDir.target.updateMatrixWorld();
       }
       // Load Cubemap
       textureCube = new CubeTextureLoader().load(faceNames.map((i) => `./cubemaps/${sceneName}/${viewName}/${i}.jpg`));
@@ -216,10 +204,7 @@ async function loadCubemap(sceneName, viewName) {
       }
       // Save current scene name
       currentSceneName = sceneName;
-      console.log('Loaded');
     },
-    // (xhr) => { console.log(`${(xhr.loaded / xhr.total) * 100}%`); },
-    // (err) => { console.error(`Failed to load cubemap: ${err}`); },
   );
 }
 
